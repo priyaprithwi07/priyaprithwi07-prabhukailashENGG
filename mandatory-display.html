@@ -579,31 +579,81 @@ footer{background:#212121;color:#888}
 </footer>
 
 <script>
-function showTab(id,el){
-  document.querySelectorAll('.md-panel').forEach(function(p){p.classList.remove('active')});
-  document.querySelectorAll('.md-tab').forEach(function(t){t.classList.remove('active')});
-  var panel = document.getElementById('tab-'+id);
+function showTab(id, el){
+  document.querySelectorAll('.md-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.md-tab').forEach(t => t.classList.remove('active'));
+  let panel = document.getElementById('tab-' + id);
   if(panel) panel.classList.add('active');
   el.classList.add('active');
 }
-function showFb(id,el){
-  document.querySelectorAll('.fb-panel').forEach(function(p){p.classList.remove('active')});
-  document.querySelectorAll('.fb-tab-btn').forEach(function(t){t.classList.remove('active')});
-  var panel = document.getElementById('fb-'+id);
+
+function showFb(id, el){
+  document.querySelectorAll('.fb-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.fb-tab-btn').forEach(t => t.classList.remove('active'));
+  let panel = document.getElementById('fb-' + id);
   if(panel) panel.classList.add('active');
   el.classList.add('active');
 }
-function rate(rowId,n){
-  var btns=document.querySelectorAll('#'+rowId+' .star-btn');
-  btns.forEach(function(b,i){b.classList.toggle('lit',i<n)});
+
+function rate(rowId, n){
+  let btns = document.querySelectorAll('#' + rowId + ' .star-btn');
+  btns.forEach((b, i) => b.classList.toggle('lit', i < n));
 }
+
 function submitGrievance(){
-  var decl=document.getElementById('gf_decl');
-  if(!decl||!decl.checked){alert('Please accept the declaration before submitting.');return;}
-  var token='GRC-'+Math.floor(Math.random()*90000+10000);
-  document.getElementById('gf_token').textContent=token;
-  var s=document.getElementById('gf_success');
-  s.style.display='flex';
-  s.scrollIntoView({behavior:'smooth',block:'center'});
+  let name = document.getElementById('gf_name').value.trim();
+  let roll = document.getElementById('gf_roll').value.trim();
+  let mob = document.getElementById('gf_mob').value.trim();
+  let email = document.getElementById('gf_email').value.trim();
+  let sub = document.getElementById('gf_sub').value.trim();
+  let desc = document.getElementById('gf_desc').value.trim();
+  let decl = document.getElementById('gf_decl');
+
+  if(!name || !roll || !mob || !email || !sub || !desc){
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  if(mob.length !== 10 || isNaN(mob)){
+    alert("Enter valid 10-digit mobile number.");
+    return;
+  }
+
+  if(!decl.checked){
+    alert("Please accept the declaration.");
+    return;
+  }
+
+  let token = 'GRC-' + Math.floor(Math.random() * 90000 + 10000);
+  document.getElementById('gf_token').textContent = token;
+
+  document.getElementById('gf_success').style.display = 'flex';
+  document.getElementById('gf_success').scrollIntoView({behavior:'smooth'});
 }
-function clear
+
+function clearGrievance(){
+  document.querySelectorAll('#tab-grievance input, #tab-grievance textarea, #tab-grievance select').forEach(el => {
+    if(el.type === "radio" || el.type === "checkbox"){
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
+  });
+
+  document.getElementById('gf_success').style.display = 'none';
+}
+
+function submitFb(successId){
+  let successBox = document.getElementById(successId);
+  successBox.style.display = 'block';
+  successBox.scrollIntoView({behavior:'smooth'});
+}
+
+document.querySelectorAll('.fb-clear').forEach(btn => {
+  btn.addEventListener('click', function(){
+    let form = this.closest('.fb-wrap');
+    form.querySelectorAll('input, textarea, select').forEach(el => el.value = "");
+    form.querySelectorAll('.star-btn').forEach(star => star.classList.remove('lit'));
+  });
+});
+</script>
